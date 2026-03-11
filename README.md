@@ -1,3 +1,6 @@
+Live Link : "https://talent-scan-ai-resume-analyzer-6dfo-giu4vlnor.vercel.app/";
+
+
 # ⬡ AI Smart Interview Assistant
 ### Resume Analyzer + Job Role Predictor + Interview Question Generator
 
