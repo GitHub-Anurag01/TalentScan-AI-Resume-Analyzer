@@ -109,19 +109,29 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
     # available.  This used to be the main library before the project
     # was renamed, so many environments still have it installed.
     try:
-        # note: `PyPDF2` provides the same PdfReader interface as pypdf
         from PyPDF2 import PdfReader as LegacyPdfReader
         reader = LegacyPdfReader(io.BytesIO(file_bytes))
         for page in reader.pages:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n"
-    except Exception as e:
-        # if we reach this point none of the PDF libraries were usable
-        # raise a ValueError so the calling code can generate a user-
-        # friendly error message instead of an internal 500.
-        raise ValueError(f"Could not extract text from PDF: {e}")
+        if text.strip():
+            return text
+    except Exception:
+        # fall through to next fallback
+        pass
 
+    # --- Attempt 4: pdfminer (last resort, heavier) ---
+    try:
+        from pdfminer.high_level import extract_text as pdfminer_extract
+        # pdfminer works with file-like objects
+        miner_text = pdfminer_extract(io.BytesIO(file_bytes))
+        if miner_text and miner_text.strip():
+            return miner_text
+    except Exception:
+        pass
+
+    # nothing yielded any text – caller will raise a ValueError below
     return text
 
 
@@ -215,7 +225,13 @@ def parse_resume(file_bytes: bytes, filename: str) -> dict:
         text = extract_text_from_txt(file_bytes)
 
     if not text.strip():
-        raise ValueError("No text could be extracted from the uploaded file.")
+        # this can happen when the PDF is image‑based (scanned) or
+        # when the installed libraries truly cannot read the file.  A
+        # clearer message helps the caller/front‑end decide what to show.
+        raise ValueError(
+            "No text could be extracted from the uploaded file. "
+            "Please upload a text-based PDF or a plain .txt resume."
+        )
 
     skills = extract_skills(text)
     contact = extract_contact_info(text)

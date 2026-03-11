@@ -126,9 +126,13 @@ def analyze():
         })
 
     except ValueError as e:
-        return jsonify({"success": False, "error": str(e)}), 422
+        # treat user-facing validation problems as successful HTTP
+        # responses so the front-end doesn't log a 422 network error.
+        return jsonify({"success": False, "error": str(e)}), 200
 
     except Exception as e:
+        # unexpected server errors should still return 500 so they can
+        # be tracked, but we send JSON payload for consistency.
         app.logger.error(traceback.format_exc())
         return jsonify({
             "success": False,
