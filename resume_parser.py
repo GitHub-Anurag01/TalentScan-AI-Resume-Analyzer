@@ -105,15 +105,22 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
         pass
 
     # --- Attempt 3: PyPDF2 (legacy fallback) ---
+    # Try the older PyPDF2 package in case pypdf/pdfplumber aren't
+    # available.  This used to be the main library before the project
+    # was renamed, so many environments still have it installed.
     try:
-        from pypdf import PdfReader
-        reader = PdfReader(io.BytesIO(file_bytes))
+        # note: `PyPDF2` provides the same PdfReader interface as pypdf
+        from PyPDF2 import PdfReader as LegacyPdfReader
+        reader = LegacyPdfReader(io.BytesIO(file_bytes))
         for page in reader.pages:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n"
     except Exception as e:
-        raise RuntimeError(f"Could not extract text from PDF: {e}")
+        # if we reach this point none of the PDF libraries were usable
+        # raise a ValueError so the calling code can generate a user-
+        # friendly error message instead of an internal 500.
+        raise ValueError(f"Could not extract text from PDF: {e}")
 
     return text
 
