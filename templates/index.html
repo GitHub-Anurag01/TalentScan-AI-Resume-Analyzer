@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TalentScan AI — Resume Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ░░ Decorative background layers ░░ -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- ══════════════════ HEADER ══════════════════ -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 36 36" fill="none">
+            <polygon points="18,2 34,10 34,26 18,34 2,26 2,10" stroke="url(#goldGrad)" stroke-width="2" fill="none"/>
+            <polygon points="18,8 28,13 28,23 18,28 8,23 8,13" fill="url(#goldFill)" opacity="0.15"/>
+            <circle cx="18" cy="18" r="4" fill="url(#goldFill)"/>
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f5c842"/>
+                <stop offset="100%" stop-color="#e8925a"/>
+              </linearGradient>
+              <linearGradient id="goldFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f5c842"/>
+                <stop offset="100%" stop-color="#e8925a"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-name">TalentScan</span>
+          <span class="logo-ai">AI</span>
+        </div>
+      </div>
+      <nav class="nav-pills">
+        <span class="pill">Resume Analysis</span>
+        <span class="pill">Role Prediction</span>
+        <span class="pill active-pill">Interview Prep</span>
+      </nav>
+      <div class="header-badge">
+        <span class="badge-dot"></span> ML Powered
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span>Intelligent Career Intelligence</span>
+      <span class="eyebrow-line"></span>
+    </div>
+    <h1 class="hero-title">
+      <span class="title-line-1">Scan Your</span>
+      <span class="title-line-2">Resume.<span class="gold-dot"> </span>Ace</span>
+      <span class="title-line-3">Your Interview.</span>
+    </h1>
+    <p class="hero-sub">
+      Upload your resume and let our ML engine extract your skills,
+      predict your ideal job role, and generate tailored interview
+      questions — in under 5 seconds.
+    </p>
+    <div class="hero-stats">
+      <div class="h-stat"><span class="h-num">100+</span><span class="h-lbl">Skills Tracked</span></div>
+      <div class="h-divider"></div>
+      <div class="h-stat"><span class="h-num">10</span><span class="h-lbl">Job Roles</span></div>
+      <div class="h-divider"></div>
+      <div class="h-stat"><span class="h-num">200+</span><span class="h-lbl">Interview Q&amp;A</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <main>
+
+    <!-- ── Upload Card ── -->
+    <section class="upload-section" id="uploadSection">
+      <div class="upload-card">
+        <div class="card-shine"></div>
+
+        <div class="upload-zone" id="dropZone">
+          <div class="upload-anim">
+            <div class="upload-rings">
+              <div class="ring r1"></div>
+              <div class="ring r2"></div>
+              <div class="ring r3"></div>
+            </div>
+            <div class="upload-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </div>
+          </div>
+          <p class="dz-title">Drop your resume here</p>
+          <p class="dz-sub">Supports PDF &amp; TXT · Max 10 MB</p>
+          <label class="btn-browse" for="fileInput">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>
+            Browse Files
+            <input type="file" id="fileInput" accept=".pdf,.txt" hidden />
+          </label>
+        </div>
+
+        <div class="file-preview hidden" id="filePreview">
+          <div class="fp-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="fp-meta">
+            <span class="fp-name" id="fileName">resume.pdf</span>
+            <span class="fp-size" id="fileSize">—</span>
+          </div>
+          <div class="fp-check">✓</div>
+          <button class="fp-remove" id="clearFile" title="Remove">✕</button>
+        </div>
+
+        <button class="btn-analyze" id="analyzeBtn" disabled>
+          <span class="btn-content">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span id="btnLabel">Analyze Resume</span>
+          </span>
+          <span class="btn-shimmer"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Loader ── -->
+    <div class="loader hidden" id="loader">
+      <div class="loader-visual">
+        <svg class="loader-hex" viewBox="0 0 100 100">
+          <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="url(#hexGrad)" stroke-width="3" stroke-dasharray="240" stroke-dashoffset="240">
+            <animate attributeName="stroke-dashoffset" from="240" to="0" dur="1.5s" repeatCount="indefinite"/>
+          </polygon>
+          <defs>
+            <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f5c842"/>
+              <stop offset="100%" stop-color="#e8925a"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="loader-icon">⬡</div>
+      </div>
+      <p class="loader-title">Scanning your resume</p>
+      <div class="loader-steps">
+        <div class="lstep" id="step1"><span class="lstep-num">01</span><span class="lstep-txt">Extracting text</span><span class="lstep-check">✓</span></div>
+        <div class="lstep" id="step2"><span class="lstep-num">02</span><span class="lstep-txt">Detecting skills</span><span class="lstep-check">✓</span></div>
+        <div class="lstep" id="step3"><span class="lstep-num">03</span><span class="lstep-txt">Predicting role</span><span class="lstep-check">✓</span></div>
+        <div class="lstep" id="step4"><span class="lstep-num">04</span><span class="lstep-txt">Generating questions</span><span class="lstep-check">✓</span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ RESULTS ══════════════════ -->
+    <section class="results hidden" id="results">
+
+      <!-- Top stats strip -->
+      <div class="results-header">
+        <div class="rh-title">
+          <span class="rh-icon">⬡</span>
+          <span>Analysis Complete</span>
+        </div>
+        <div class="stats-strip">
+          <div class="ss-item">
+            <span class="ss-val" id="statSkills">0</span>
+            <span class="ss-lbl">Skills</span>
+          </div>
+          <div class="ss-sep"></div>
+          <div class="ss-item">
+            <span class="ss-val gold" id="statRole">—</span>
+            <span class="ss-lbl">Predicted Role</span>
+          </div>
+          <div class="ss-sep"></div>
+          <div class="ss-item">
+            <span class="ss-val" id="statConf">0%</span>
+            <span class="ss-lbl">Confidence</span>
+          </div>
+          <div class="ss-sep"></div>
+          <div class="ss-item">
+            <span class="ss-val" id="statQuestions">0</span>
+            <span class="ss-lbl">Questions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="results-grid">
+
+        <!-- ── LEFT ── -->
+        <div class="col-left">
+
+          <!-- Skills -->
+          <div class="card">
+            <div class="card-head">
+              <div class="ch-left">
+                <div class="ch-icon skills-icon">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h2>Detected Skills</h2>
+              </div>
+              <span class="ch-badge" id="skillCount">0 skills</span>
+            </div>
+            <div class="skills-cloud" id="skillsCloud"></div>
+          </div>
+
+          <!-- Role -->
+          <div class="card role-card">
+            <div class="card-head">
+              <div class="ch-left">
+                <div class="ch-icon role-icon">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/></svg>
+                </div>
+                <h2>Role Prediction</h2>
+              </div>
+              <span class="ch-badge gold-badge" id="confBadge">0%</span>
+            </div>
+            <div class="role-display">
+              <div class="role-name" id="roleName">—</div>
+              <div class="conf-track">
+                <div class="conf-fill" id="confBar" style="width:0%"></div>
+                <span class="conf-label" id="confLabel">0%</span>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="rolesChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── RIGHT ── -->
+        <div class="col-right">
+          <div class="card questions-card">
+            <div class="card-head">
+              <div class="ch-left">
+                <div class="ch-icon q-icon">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+                </div>
+                <h2>Interview Questions</h2>
+              </div>
+              <button class="btn-dl" id="downloadBtn">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                Export
+              </button>
+            </div>
+
+            <div class="q-tabs">
+              <button class="q-tab active" data-tab="skill_based">
+                <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 01-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 01.872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 012.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 012.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 01.872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 01-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 01-2.105-.872l-.1-.34z"/></svg>
+                Skill-Based
+              </button>
+              <button class="q-tab" data-tab="role_based">
+                <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zM8 9a5 5 0 00-4.546 2.916A5.986 5.986 0 008 14a5.986 5.986 0 004.546-2.084A5 5 0 008 9z"/></svg>
+                Role-Based
+              </button>
+              <button class="q-tab" data-tab="general">
+                <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v1a1 1 0 01-1 1H3a1 1 0 01-1-1V3zM2 7a1 1 0 011-1h10a1 1 0 011 1v1a1 1 0 01-1 1H3a1 1 0 01-1-1V7zM3 11a1 1 0 000 2h6a1 1 0 000-2H3z"/></svg>
+                General
+              </button>
+            </div>
+
+            <ol class="q-list" id="questionList"></ol>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="scan-again-wrap">
+        <button class="btn-again" id="analyzeAgain">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+          Scan Another Resume
+        </button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-name" style="font-size:1rem">TalentScan</span>
+        <span class="logo-ai" style="font-size:0.85rem">AI</span>
+      </div>
+      <p class="footer-copy">Powered by Flask · Scikit-learn · NLP · Chart.js</p>
+      <p class="footer-note">© 2026 TalentScan AI. For interview preparation purposes.</p>
+    </div>
+  </footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+// ─── Element refs ────────────────────────────────────────
+const fileInput     = document.getElementById('fileInput');
+const dropZone      = document.getElementById('dropZone');
+const filePreview   = document.getElementById('filePreview');
+const fileName      = document.getElementById('fileName');
+const fileSize      = document.getElementById('fileSize');
+const clearFile     = document.getElementById('clearFile');
+const analyzeBtn    = document.getElementById('analyzeBtn');
+const loader        = document.getElementById('loader');
+const results       = document.getElementById('results');
+const uploadSection = document.getElementById('uploadSection');
+
+let selectedFile = null;
+let rolesChart   = null;
+let allQuestions = {};
+
+// ─── Particle canvas ────────────────────────────────────
+const canvas = document.getElementById('particleCanvas');
+const ctx2   = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < 55; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      dx: (Math.random() - 0.5) * 0.3,
+      dy: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.5 + 0.1,
+    });
+  }
+}
+
+function drawParticles() {
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  for (const p of particles) {
+    ctx2.beginPath();
+    ctx2.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx2.fillStyle = `rgba(245, 200, 66, ${p.alpha})`;
+    ctx2.fill();
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width)  p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  }
+  requestAnimationFrame(drawParticles);
+}
+
+resizeCanvas(); initParticles(); drawParticles();
+window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+// ─── Utilities ───────────────────────────────────────────
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── File handling ───────────────────────────────────────
+function setFile(file) {
+  selectedFile = file;
+  fileName.textContent = file.name;
+  fileSize.textContent = formatBytes(file.size);
+  dropZone.classList.add('hidden');
+  filePreview.classList.remove('hidden');
+  analyzeBtn.disabled = false;
+  analyzeBtn.classList.add('ready');
+}
+
+function clearSelection() {
+  selectedFile = null;
+  fileInput.value = '';
+  dropZone.classList.remove('hidden');
+  filePreview.classList.add('hidden');
+  analyzeBtn.disabled = true;
+  analyzeBtn.classList.remove('ready');
+}
+
+fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+clearFile.addEventListener('click', clearSelection);
+
+['dragenter','dragover'].forEach(ev =>
+  dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('drag-over'); })
+);
+['dragleave','drop'].forEach(ev =>
+  dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('drag-over'); })
+);
+dropZone.addEventListener('drop', e => {
+  const f = e.dataTransfer.files[0];
+  if (f) setFile(f);
+});
+
+// ─── Tabs ────────────────────────────────────────────────
+document.querySelectorAll('.q-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.q-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderQuestions(tab.dataset.tab);
+  });
+});
+
+document.getElementById('analyzeAgain').addEventListener('click', () => {
+  results.classList.add('hidden');
+  uploadSection.classList.remove('hidden');
+  clearSelection();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('downloadBtn').addEventListener('click', downloadQuestions);
+
+// ─── Analyze ─────────────────────────────────────────────
+analyzeBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  uploadSection.classList.add('hidden');
+  loader.classList.remove('hidden');
+  results.classList.add('hidden');
+  animateSteps();
+
+  const formData = new FormData();
+  formData.append('resume', selectedFile);
+
+  try {
+    const res  = await fetch('/analyze', { method: 'POST', body: formData });
+    const data = await res.json();
+    await sleep(700);
+    loader.classList.add('hidden');
+
+    if (!data.success) {
+      showError(data.error || 'Analysis failed.'); 
+      uploadSection.classList.remove('hidden');
+      return;
+    }
+    renderResults(data);
+    results.classList.remove('hidden');
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch(err) {
+    loader.classList.add('hidden');
+    uploadSection.classList.remove('hidden');
+    showError('Network error. Is the server running?');
+  }
+});
+
+// ─── Loader animation ────────────────────────────────────
+function animateSteps() {
+  const ids = ['step1','step2','step3','step4'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active','done');
+  });
+  ids.forEach((id, i) => {
+    setTimeout(() => {
+      if (i > 0) document.getElementById(ids[i-1]).classList.replace('active','done');
+      document.getElementById(id).classList.add('active');
+    }, i * 650);
+  });
+}
+
+// ─── Render results ──────────────────────────────────────
+function renderResults(data) {
+  const { skills, job_role, confidence, all_scores, questions } = data;
+  allQuestions = questions;
+
+  document.getElementById('statSkills').textContent = skills.length;
+  document.getElementById('statRole').textContent   = job_role;
+  document.getElementById('statConf').textContent   = Math.round(confidence*100) + '%';
+  const totalQ = (questions.skill_based||[]).length + (questions.role_based||[]).length + (questions.general||[]).length;
+  document.getElementById('statQuestions').textContent = totalQ;
+
+  // Skills cloud
+  const cloud = document.getElementById('skillsCloud');
+  cloud.innerHTML = '';
+  document.getElementById('skillCount').textContent = skills.length + ' skills';
+  const categories = {
+    'Python': 'cat-lang', 'JavaScript': 'cat-lang', 'Java': 'cat-lang', 'TypeScript': 'cat-lang',
+    'React': 'cat-web', 'HTML': 'cat-web', 'CSS': 'cat-web', 'Vue.js': 'cat-web',
+    'Machine Learning': 'cat-ml', 'Deep Learning': 'cat-ml', 'TensorFlow': 'cat-ml', 'PyTorch': 'cat-ml',
+    'Docker': 'cat-devops', 'Kubernetes': 'cat-devops', 'AWS': 'cat-devops', 'CI/CD': 'cat-devops',
+    'SQL': 'cat-data', 'PostgreSQL': 'cat-data', 'MongoDB': 'cat-data',
+  };
+  skills.forEach((skill, i) => {
+    const tag = document.createElement('span');
+    const cat = categories[skill] || 'cat-default';
+    tag.className = `skill-tag ${cat}`;
+    tag.textContent = skill;
+    tag.style.animationDelay = (i * 35) + 'ms';
+    cloud.appendChild(tag);
+  });
+
+  document.getElementById('roleName').textContent    = job_role;
+  document.getElementById('confBadge').textContent   = Math.round(confidence*100) + '%';
+  document.getElementById('confLabel').textContent   = Math.round(confidence*100) + '%';
+  setTimeout(() => {
+    document.getElementById('confBar').style.width = Math.round(confidence*100) + '%';
+  }, 400);
+
+  renderChart(all_scores);
+
+  document.querySelectorAll('.q-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === 'skill_based')
+  );
+  renderQuestions('skill_based');
+}
+
+function renderQuestions(tab) {
+  const list = document.getElementById('questionList');
+  list.innerHTML = '';
+  const qs = allQuestions[tab] || [];
+  if (!qs.length) {
+    list.innerHTML = '<li class="no-q">No questions in this category.</li>';
+    return;
+  }
+  qs.forEach((q, i) => {
+    const li = document.createElement('li');
+    li.className = 'q-item';
+    li.style.animationDelay = (i * 55) + 'ms';
+    li.innerHTML = `<span class="q-num">${String(i+1).padStart(2,'0')}</span><span class="q-body">${q}</span>`;
+    list.appendChild(li);
+  });
+}
+
+function renderChart(allScores) {
+  if (rolesChart) rolesChart.destroy();
+  const top5   = allScores.slice(0, 5);
+  const labels = top5.map(s => s.role);
+  const values = top5.map(s => Math.round(s.score * 100));
+
+  const ctx = document.getElementById('rolesChart').getContext('2d');
+  rolesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: [
+          'rgba(245,200,66,0.85)',
+          'rgba(232,146,90,0.72)',
+          'rgba(232,100,90,0.55)',
+          'rgba(180,90,200,0.42)',
+          'rgba(100,120,220,0.32)',
+        ],
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.parsed.x}% confidence` } }
+      },
+      scales: {
+        x: {
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#9aa3b2', font: { family: 'DM Mono', size: 11 }, callback: v => v + '%' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#c8d0db', font: { family: 'DM Sans', size: 11 } }
+        }
+      }
+    }
+  });
+}
+
+function downloadQuestions() {
+  const role = document.getElementById('roleName').textContent;
+  let text = `TalentScan AI — Interview Questions\nPredicted Role: ${role}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+  const sections = {
+    'SKILL-BASED QUESTIONS': allQuestions.skill_based || [],
+    'ROLE-BASED QUESTIONS':  allQuestions.role_based  || [],
+    'GENERAL QUESTIONS':     allQuestions.general     || [],
+  };
+  for (const [title, qs] of Object.entries(sections)) {
+    text += `\n── ${title} ──────────────────────\n`;
+    qs.forEach((q, i) => { text += `\n${i+1}. ${q}\n`; });
+  }
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'talentscan_questions.txt';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function showError(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast-error';
+  el.innerHTML = `<span class="toast-icon">⚠</span> ${msg}`;
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 40);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 500); }, 4500);
+}
+</script>
+</body>
+</html>

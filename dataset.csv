@@ -1,0 +1,57 @@
+skills,job_role
+Python Machine Learning Deep Learning TensorFlow PyTorch Scikit-learn Statistics NLP,Data Scientist
+Python Machine Learning Scikit-learn NLP NLTK spaCy Data Analysis,Data Scientist
+R Statistics Machine Learning Data Visualization Tableau SQL,Data Scientist
+Python Deep Learning Neural Networks Computer Vision OpenCV,Data Scientist
+SQL Python Data Analysis Pandas Matplotlib Statistics,Data Scientist
+Python NumPy Pandas Data Wrangling Feature Engineering,Data Scientist
+
+Python Java Spring Boot REST API Microservices SQL Docker,Backend Developer
+Java Spring Hibernate SQL REST API Maven Jenkins,Backend Developer
+Python Django Flask REST API PostgreSQL Redis Docker,Backend Developer
+Node.js Express MongoDB REST API JavaScript TypeScript,Backend Developer
+Go REST API Docker Kubernetes PostgreSQL Redis,Backend Developer
+Ruby Rails PostgreSQL REST API Docker,Backend Developer
+Python FastAPI PostgreSQL Redis Docker Kubernetes,Backend Developer
+
+HTML CSS JavaScript React TypeScript Redux,Frontend Developer
+HTML CSS JavaScript Vue.js Webpack Sass,Frontend Developer
+HTML CSS JavaScript Angular TypeScript RxJS,Frontend Developer
+JavaScript TypeScript React Redux Next.js CSS-in-JS,Frontend Developer
+HTML CSS JavaScript jQuery Bootstrap WordPress,Frontend Developer
+React Vue Angular TypeScript JavaScript CSS,Frontend Developer
+
+Python Machine Learning TensorFlow Deep Learning NLP Computer Vision,ML Engineer
+Python PyTorch Deep Learning NLP Transformers BERT GPT,ML Engineer
+Python Scikit-learn MLOps Docker Kubernetes MLflow,ML Engineer
+Machine Learning Python TensorFlow Keras Data Pipelines,ML Engineer
+Python Deep Learning NLP BERT Transformers Hugging Face,ML Engineer
+Python MLOps Docker Kubernetes Airflow Spark ML,ML Engineer
+
+Java Kotlin Android Studio Mobile Development XML JSON,Android Developer
+Kotlin Android Jetpack Compose Firebase REST API,Android Developer
+Java Android SDK Mobile UI Design REST API SQLite,Android Developer
+React Native JavaScript Mobile iOS Android REST API,Mobile Developer
+Swift iOS Objective-C Xcode CocoaPods REST API,iOS Developer
+
+AWS Azure Docker Kubernetes Terraform CI/CD Jenkins Ansible,DevOps Engineer
+Docker Kubernetes Jenkins CI/CD Terraform AWS Bash,DevOps Engineer
+AWS Lambda Docker Kubernetes Terraform Monitoring,DevOps Engineer
+Azure DevOps Docker Kubernetes Terraform CI/CD,DevOps Engineer
+Linux Docker Kubernetes Jenkins Bash Git CI/CD Ansible,DevOps Engineer
+
+SQL MySQL PostgreSQL MongoDB Database Design Indexing,Database Administrator
+SQL Oracle PL/SQL Database Administration Backup Recovery,Database Administrator
+PostgreSQL MySQL MongoDB Redis Database Tuning,Database Administrator
+SQL NoSQL MongoDB Redis Cassandra Data Modeling,Database Administrator
+
+HTML CSS JavaScript PHP MySQL WordPress,Full Stack Developer
+React Node.js Express MongoDB JavaScript TypeScript,Full Stack Developer
+Python Django HTML CSS JavaScript PostgreSQL,Full Stack Developer
+Vue.js Node.js PostgreSQL REST API Docker,Full Stack Developer
+Angular Java Spring Boot SQL Docker CI/CD,Full Stack Developer
+
+Selenium TestNG JUnit Java Automation Testing CI/CD,QA Engineer
+Python Selenium Pytest Automation Testing REST API,QA Engineer
+Manual Testing Selenium Java TestNG API Testing,QA Engineer
+Cypress JavaScript Automation Testing CI/CD API Testing,QA Engineer

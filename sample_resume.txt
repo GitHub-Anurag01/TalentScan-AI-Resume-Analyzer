@@ -1,0 +1,65 @@
+ALEX MORGAN
+Senior Machine Learning Engineer
+alex.morgan@email.com | +1 (555) 234-5678
+linkedin.com/in/alexmorgan | github.com/alexmorgan
+
+─────────────────────────────────────────────────────────────
+PROFESSIONAL SUMMARY
+─────────────────────────────────────────────────────────────
+Results-driven Machine Learning Engineer with 5+ years of
+experience designing and deploying production-grade ML systems.
+Expertise in Deep Learning, NLP, and Computer Vision. Passionate
+about building scalable ML pipelines and leveraging data to
+solve real-world problems.
+
+─────────────────────────────────────────────────────────────
+SKILLS
+─────────────────────────────────────────────────────────────
+Languages     : Python, SQL, Bash, R
+ML / AI       : Machine Learning, Deep Learning, NLP, Computer Vision,
+                TensorFlow, PyTorch, Scikit-learn, Keras, Hugging Face,
+                Transformers, BERT, XGBoost, MLflow
+Data          : Pandas, NumPy, Matplotlib, Seaborn, Plotly
+Backend       : Flask, FastAPI, REST API
+DevOps/Cloud  : Docker, Kubernetes, AWS, Git, CI/CD, Airflow
+Databases     : PostgreSQL, MongoDB, Redis
+
+─────────────────────────────────────────────────────────────
+WORK EXPERIENCE
+─────────────────────────────────────────────────────────────
+Senior ML Engineer | DataTech Inc.                 2021 – Present
+- Built end-to-end NLP pipeline using BERT and Hugging Face
+  Transformers for document classification (95% accuracy).
+- Deployed deep learning models to AWS using Docker and Kubernetes
+  serving 10M+ predictions per day.
+- Implemented MLflow-based experiment tracking and model registry.
+- Developed data pipelines using Apache Airflow and Spark.
+
+ML Engineer | AI Innovations Ltd.                  2019 – 2021
+- Trained CNNs with PyTorch for image classification tasks.
+- Built Python-based REST API (FastAPI) for model serving.
+- Applied feature engineering and cross-validation to improve
+  model performance by 18%.
+- Collaborated with DevOps team on CI/CD pipeline for ML models.
+
+─────────────────────────────────────────────────────────────
+EDUCATION
+─────────────────────────────────────────────────────────────
+M.S. Computer Science (Machine Learning)     Stanford University, 2019
+B.S. Mathematics & Statistics                UC Berkeley, 2017
+
+─────────────────────────────────────────────────────────────
+PROJECTS
+─────────────────────────────────────────────────────────────
+Resume Analyzer (Python, Scikit-learn, Flask, NLP)
+  - Built an NLP-based system to extract skills and classify resumes.
+
+Sentiment Analysis API (PyTorch, Transformers, FastAPI, Docker)
+  - Fine-tuned BERT model for product review sentiment analysis.
+
+─────────────────────────────────────────────────────────────
+CERTIFICATIONS
+─────────────────────────────────────────────────────────────
+- AWS Certified Machine Learning – Specialty
+- Deep Learning Specialization — deeplearning.ai (Coursera)
+- TensorFlow Developer Certificate — Google
